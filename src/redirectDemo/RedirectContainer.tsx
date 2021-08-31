@@ -4,6 +4,9 @@ import {auth, send} from './oneWalletRedirect'
 import * as events from './oneWalletRedirect/events'
 import {useWindowEvent} from './hooks'
 
+const blockExplorerMainnetURL = 'https://explorer.harmony.one/tx/'
+const blockExplorerTestnetURL = 'https://explorer.pops.one/tx/'
+
 function RedirectContainer() {
     const [address, setAddress] = useState('')
 
@@ -11,7 +14,7 @@ function RedirectContainer() {
     useWindowEvent(events.transactionSentErrorEvent, () => alert('Failed to send the transaction'))
     useWindowEvent(events.transactionSentEvent, () => alert('Transaction sent!'))
 
-    const [amount, setAmount] = useState(0)
+    const [amount, setAmount] = useState(2)
     const [recipient, setRecipient] = useState('')
 
 
@@ -28,7 +31,9 @@ function RedirectContainer() {
         <div>
             <div>
                 Send ONE Tokens<br/>
-                {address && <>From {address}</>}
+                <span style={{fontSize: '14px'}}>
+                    {address && <>From {address}</>}
+                </span>
             </div>
             <div className="container">
                 <input onChange={handleOnChange}
@@ -44,7 +49,9 @@ function RedirectContainer() {
             </div>
 
             <div style={{marginTop: '18px'}}>
-                {(amount && recipient && address) ? <button className="btn" onClick={() => send(address, recipient, +amount)}>Send ONE Tokens</button> : null}
+                {(amount && recipient && address) ?
+                    <button className="btn" onClick={() => send(address, recipient, +amount)}>Send ONE
+                        Tokens</button> : null}
             </div>
 
             <div style={{marginTop: '18px'}}>
