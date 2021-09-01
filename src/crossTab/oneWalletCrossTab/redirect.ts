@@ -1,11 +1,10 @@
 import * as events from './events'
 
 const oneWalletURL = 'https://1wallet.crazy.one/auth'
-const callbackLocation = '/redirect/one-wallet-callback'
+const callbackLocation = '/one-wallet-callback'
 const callbackURL = window.location.origin + callbackLocation
 const callbackLocationBase64 = btoa(callbackURL)
 const appName = 'ONE Wallet Integration Demo App'
-const appBaseLocation = '/redirect'
 
 
 export const auth = () => {
@@ -15,7 +14,9 @@ export const auth = () => {
     }
 
     const params = new URLSearchParams(o).toString()
-    window.location.href = oneWalletURL + '/connect?' + params
+    const url = oneWalletURL + '/connect?' + params
+
+    window.open(url, '_blank')
 }
 
 export const send = (from: string, to: string, amount: number) => {
@@ -24,11 +25,13 @@ export const send = (from: string, to: string, amount: number) => {
         callback: callbackLocationBase64,
         amount: (BigInt(amount) * BigInt(1000000000000000000)).toString(),
         from,
-        dest: to
+        dest: to,
     }
 
     const params = new URLSearchParams(o).toString()
-    window.location.href = oneWalletURL + '/pay?' + params
+    const url = oneWalletURL + '/pay?' + params
+
+    window.open(url, '_blank')
 }
 
 
@@ -40,7 +43,6 @@ const processONEWalletCallback = () => {
     }
 
     const params = new URLSearchParams(window.location.search)
-    window.history.pushState({}, '', appBaseLocation)
 
     const success = +(params.get('success') || 0)
     const address = params.get('address')
@@ -48,20 +50,13 @@ const processONEWalletCallback = () => {
 
     if (success && address) {
         window.dispatchEvent(new CustomEvent(events.walletConnectedEvent, {detail: address}))
-        return
-    }
-
-    if (success && txId) {
+    } else if (success && txId) {
         window.dispatchEvent(new CustomEvent(events.transactionSentEvent, {detail: txId}))
-        return
-    }
-
-    if (!success && txId) {
+    } else if (!success && txId) {
         window.dispatchEvent(new CustomEvent(events.transactionSentErrorEvent))
-        return
     }
 
-    console.log({success, address, txId})
+    window.close()
 }
 
 setTimeout(processONEWalletCallback, 0)

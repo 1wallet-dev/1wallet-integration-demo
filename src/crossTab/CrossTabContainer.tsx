@@ -1,22 +1,29 @@
 import React, {useState, useCallback} from 'react';
-import './RedirectContainer.css';
-import {auth, send} from './oneWalletRedirect'
-import * as events from './oneWalletRedirect/events'
-import {useWindowEvent} from './hooks'
+import './CrossTabContainer.css';
+import * as ONEWallet from './oneWalletCrossTab'
 
 const blockExplorerMainnetURL = 'https://explorer.harmony.one/tx/'
 const blockExplorerTestnetURL = 'https://explorer.pops.one/tx/'
 
-function RedirectContainer() {
+function CrossTabContainer() {
     const [address, setAddress] = useState('')
-
-    useWindowEvent(events.walletConnectedEvent, setAddress)
-    useWindowEvent(events.transactionSentErrorEvent, () => alert('Failed to send the transaction'))
-    useWindowEvent(events.transactionSentEvent, (txId: string) => alert(`Transaction ${txId} sent!`))
 
     const [amount, setAmount] = useState(2)
     const [recipient, setRecipient] = useState('')
 
+    const auth = async () => {
+        const res = await ONEWallet.auth()
+        setAddress(res as string)
+    }
+
+    const send = async (from: string, to: string, amount: number) => {
+        try {
+            const res = await ONEWallet.send(from, to, amount)
+            alert(`Transaction ${res} sent!`)
+        } catch (e) {
+            alert('Failed to send the transaction')
+        }
+    }
 
     const handleOnChange = useCallback(event => {
         const {name, value} = event.target
@@ -62,4 +69,4 @@ function RedirectContainer() {
     );
 }
 
-export default RedirectContainer;
+export default CrossTabContainer;
