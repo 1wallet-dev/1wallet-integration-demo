@@ -1,8 +1,7 @@
 import {BroadcastChannel} from 'broadcast-channel'
 import * as events from './events'
 import * as redirect from './redirect'
-
-const channel = new BroadcastChannel('one-wallet-channel')
+const channel = new BroadcastChannel('one-wallet-iframe-channel')
 
 
 // todo remove
