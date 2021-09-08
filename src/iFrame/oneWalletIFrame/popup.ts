@@ -2,7 +2,7 @@ export const popUpDOMID = 'one-wallet-popup'
 export const iFrameDOMID = 'one-wallet-iframe'
 
 const popupDiv = document.createElement('div')
-const popupWidth = 500
+const popupWidth = 600
 let iframeElement: HTMLElement | null = null
 
 popupDiv.id = popUpDOMID
@@ -13,13 +13,13 @@ style.innerHTML = `
       #${popUpDOMID} {
         background-color: white;
         width: ${popupWidth}px;
-        height: 500px;
+        height: 600px;
         color:black;
         top: 40px;
         left: calc(50% - ${popupWidth / 2}px);
         position: fixed;
         z-index: 99999;
-        padding: 20px;
+        padding: 0px;
         border-radius: 10px;
         border: 1px black solid;
         display: none;
@@ -35,10 +35,13 @@ const removeIFrame = () => {
 
 export const open = (url: string) => {
     removeIFrame()
-    const iframe = document.createElement('iframe')
-    iframe.id = iFrameDOMID
-    iframe.src = url
-    popupDiv.appendChild(iframe)
+    iframeElement = document.createElement('iframe')
+    iframeElement.id = iFrameDOMID
+    iframeElement.style.width = popupWidth + 'px'
+    iframeElement.style.height = '600px'
+    // @ts-ignore
+    iframeElement.src = url
+    popupDiv.appendChild(iframeElement)
     popupDiv.style.display = 'block'
 }
 

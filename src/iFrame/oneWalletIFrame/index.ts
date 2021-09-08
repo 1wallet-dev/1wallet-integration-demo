@@ -1,6 +1,7 @@
 import {BroadcastChannel} from 'broadcast-channel'
 import * as events from './events'
 import * as redirect from './redirect'
+import * as popup from './popup'
 const channel = new BroadcastChannel('one-wallet-iframe-channel')
 
 
@@ -22,6 +23,7 @@ export const auth = async () => {
 
     return new Promise((resolve, reject) => {
         const handler = (crossTabEvent: string) => {
+            popup.close()
             const e = parseMessage(crossTabEvent)
 
             if (e.eventName === events.walletConnectedEvent) {
@@ -39,6 +41,7 @@ export const send = async (from: string, to: string, amount: number) => {
 
     return new Promise((resolve, reject) => {
         const handler = (crossTabEvent: string) => {
+            popup.close()
             const e = parseMessage(crossTabEvent)
 
             if (e.eventName === events.transactionSentEvent) {

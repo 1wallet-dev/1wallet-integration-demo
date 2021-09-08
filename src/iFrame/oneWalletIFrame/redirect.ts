@@ -33,7 +33,7 @@ export const send = (from: string, to: string, amount: number) => {
     const params = new URLSearchParams(o).toString()
     const url = oneWalletURL + '/pay?' + params
 
-    window.open(url, '_blank')
+    popup.open(url)
 }
 
 
@@ -56,9 +56,12 @@ const processONEWalletCallback = () => {
         window.dispatchEvent(new CustomEvent(events.transactionSentEvent, {detail: txId}))
     } else if (!success && txId) {
         window.dispatchEvent(new CustomEvent(events.transactionSentErrorEvent))
+    } else {
+        // todo cancel event
+        window.dispatchEvent(new CustomEvent(events.transactionSentErrorEvent))
     }
 
-    popup.close()
+    window.close()
 }
 
 setTimeout(processONEWalletCallback, 0)
