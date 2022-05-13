@@ -1,6 +1,7 @@
 import * as events from './events'
 
-const oneWalletURL = 'https://1wallet.crazy.one/auth'
+// const oneWalletURL = 'https://1wallet.crazy.one/auth'
+const oneWalletURL = 'https://192.168.0.40:3000/auth'
 const callbackLocation = '/one-wallet-callback'
 const callbackURL = window.location.origin + callbackLocation
 const callbackLocationBase64 = btoa(callbackURL)
